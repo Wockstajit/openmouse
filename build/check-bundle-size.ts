@@ -53,7 +53,9 @@ export const BUDGET_BYTES: Record<string, number> = {
   // Adaptive HITS test, live preview and calibration, including translations:
   // 178,346 bytes CSS (+624 for the Buttons controls), 4,019,232 bytes JS (+15,983).
   ".css": 179_000,
-  ".js": 4_020_000,
+  // Intent cue retries, consistency checks, measured ranges and translations
+  // add 4,405 bytes of JS, for 4,023,637 bytes in the production build.
+  ".js": 4_025_000,
 };
 
 // main-*.js measured 1,511,619 bytes right after the split (posthog ~377 kB

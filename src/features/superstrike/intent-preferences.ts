@@ -3,6 +3,7 @@ import { DEFAULT_INTENT_SPEED, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_S
 export interface IntentPreferences {
   enabled: boolean;
   speed: number;
+  side: 0 | 1;
 }
 
 function key(device: string): string {
@@ -10,12 +11,13 @@ function key(device: string): string {
 }
 
 export function loadIntentPreferences(storage: Storage, device: string): IntentPreferences {
-  const defaults = { enabled: false, speed: DEFAULT_INTENT_SPEED };
+  const defaults: IntentPreferences = { enabled: false, speed: DEFAULT_INTENT_SPEED, side: 0 };
   try {
     const stored: Partial<IntentPreferences> | null = JSON.parse(storage.getItem(key(device)) ?? "null");
     const speed = stored?.speed;
     return {
       enabled: stored?.enabled === true,
+      side: stored?.side === 1 ? 1 : 0,
       speed: typeof speed === "number" && speed >= MIN_INTENT_SPEED && speed <= MAX_INTENT_SPEED
         && speed % INTENT_SPEED_STEP === 0 ? speed : defaults.speed,
     };

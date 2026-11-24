@@ -4,7 +4,7 @@ import * as control from "../../device/controller";
 import { t, tp } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
 import { CONVENTIONAL_STEP, savedMs, stepTimes, type DepthSample } from "./hits-test";
-import { createIntentTrigger, INTENT_EARLY_STEP, INTENT_FALLBACK_STEP, type IntentOutcome } from "./intent-trigger";
+import { createIntentTrigger, intentDepths, type IntentOutcome } from "./intent-trigger";
 
 const ROUNDS = 1;
 // After the press, wait for the rest of its depth reports before comparing.
@@ -57,6 +57,7 @@ export function HitsTestDialog({
   sideRef.current = side;
   const actuationRef = useRef(actuation);
   actuationRef.current = actuation;
+  const { early, fallback } = intentDepths(actuation[side], maxActuation);
 
   const reset = (): void => {
     window.clearTimeout(timer.current);
@@ -85,14 +86,14 @@ export function HitsTestDialog({
   useEffect(() => {
     setIntentResult("waiting");
     if (!open || !intentOpen) return;
-    const trigger = createIntentTrigger(intentSpeed);
+    const trigger = createIntentTrigger(intentSpeed, { early, fallback });
     return control.subscribeAnalogPress((left, right) => {
       const depth = side === 0 ? left : right;
       const outcome = trigger.sample({ t: performance.now(), depth });
       if (outcome) setIntentResult(outcome);
       else if (depth === 0) setIntentResult((result) => result === "waiting" ? "ready" : result);
     });
-  }, [open, intentOpen, side, intentSpeed]);
+  }, [open, intentOpen, side, intentSpeed, early, fallback]);
 
   const start = (): void => {
     window.clearTimeout(timer.current);
@@ -213,7 +214,7 @@ export function HitsTestDialog({
           <details className="hits-intent-test" open={intentOpen} onToggle={(event) => setIntentOpen(event.currentTarget.open)}>
             <summary>{t(locale, "intent.title")}</summary>
             <p className="setting-description">
-              {tp(locale, "intent.instructions", { early: INTENT_EARLY_STEP, fallback: INTENT_FALLBACK_STEP })}
+              {tp(locale, "intent.instructions", { early, fallback })}
             </p>
             <output aria-live="polite">{t(locale, `intent.${intentResult}`)}</output>
             {intentResult === "ignored" ? <p className="setting-description">{t(locale, "intent.haptics")}</p> : null}

@@ -11,19 +11,23 @@ const MAX_SAMPLE_GAP_MS = 50;
 
 export type IntentOutcome = "early" | "fallback" | "ignored";
 
+export function intentDepths(early = INTENT_EARLY_STEP, maxActuation = 10) {
+  return { early, fallback: Math.min(maxActuation, Math.max(INTENT_FALLBACK_STEP, early + 1)) };
+}
+
 export function validDepthSample({ t, depth }: DepthSample): boolean {
   return Number.isFinite(t) && Number.isFinite(depth) && depth >= 0 && depth <= 10;
 }
 
-export function earlyPressSpeed(previous: DepthSample, current: DepthSample): number {
+export function earlyPressSpeed(previous: DepthSample, current: DepthSample, { early, fallback }: ReturnType<typeof intentDepths>): number {
   const elapsed = current.t - previous.t;
   if (elapsed <= 0 || elapsed > MAX_SAMPLE_GAP_MS
-    || current.depth < INTENT_EARLY_STEP || current.depth >= INTENT_FALLBACK_STEP) return 0;
+    || current.depth < early || current.depth >= fallback) return 0;
   return Math.max(0, (current.depth - previous.depth) * 1000 / elapsed);
 }
 
 /** Evaluate one button's host-received travel samples, once per press. */
-export function createIntentTrigger(minSpeed = DEFAULT_INTENT_SPEED) {
+export function createIntentTrigger(minSpeed = DEFAULT_INTENT_SPEED, depths = intentDepths()) {
   let previous: DepthSample | undefined;
   let armed = false;
   let fired = false;
@@ -44,12 +48,12 @@ export function createIntentTrigger(minSpeed = DEFAULT_INTENT_SPEED) {
       }
       if (!armed || fired) return null;
 
-      if (prior && earlyPressSpeed(prior, current) >= minSpeed) {
+      if (prior && earlyPressSpeed(prior, current, depths) >= minSpeed) {
         fired = true;
         return "early";
       }
       // A first report at or beyond the fallback cannot establish an earlier click.
-      if (current.depth >= INTENT_FALLBACK_STEP) {
+      if (current.depth >= depths.fallback) {
         fired = true;
         return "fallback";
       }

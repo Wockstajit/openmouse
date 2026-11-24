@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createIntentCalibration } from "./intent-calibration.ts";
-import { createIntentTrigger } from "./intent-trigger.ts";
+import { createIntentTrigger, intentDepths } from "./intent-trigger.ts";
 
 function calibrationFixture(currentSpeed: number) {
   const calibration = createIntentCalibration(currentSpeed);
@@ -9,7 +9,7 @@ function calibrationFixture(currentSpeed: number) {
   const sample = (depth: number, delay: number) => calibration.sample({ t: t += delay, depth });
   const press = (delay: number, full = true) => {
     sample(0, 20);
-    sample(2, delay);
+    sample(full ? 2 : 0.5, delay);
     if (full) sample(5, delay);
     return sample(0, delay);
   };
@@ -24,17 +24,23 @@ test("uses 10 completed normal presses and 10 completed intent presses", () => {
   for (let count = 1; count < 10; count++) assert.deepEqual(press(20), { phase: "normal", count });
   assert.deepEqual(press(20), { phase: "intent", count: 0 });
   for (let count = 1; count < 10; count++) assert.deepEqual(press(10), { phase: "intent", count });
-  assert.deepEqual(press(10), { phase: "done", speed: 105 });
+  assert.deepEqual(press(10), { phase: "done", speed: 155, range: [200, 200] });
   assert.equal(press(10), null);
 });
 
 test("preserves the existing speed when the two rounds cannot be distinguished", () => {
   const { press } = calibrationFixture(125);
   for (let click = 0; click < 19; click++) press(20);
-  assert.deepEqual(press(20), { phase: "failed" });
+  assert.deepEqual(press(20), { phase: "failed", range: [100, 100] });
 });
 
-test("only counts a full press and release made during the active cue", () => {
+test("does not calibrate from one fast outlier in the intent round", () => {
+  const { press } = calibrationFixture(125);
+  for (let click = 0; click < 19; click++) press(20);
+  assert.deepEqual(press(10), { phase: "failed", range: [100, 200] });
+});
+
+test("only counts a press and release made during the active cue", () => {
   const calibration = createIntentCalibration(100);
   assert.equal(calibration.sample({ t: 0, depth: 0 }, false), null);
   assert.equal(calibration.sample({ t: 10, depth: 5 }, false), null);
@@ -44,6 +50,19 @@ test("only counts a full press and release made during the active cue", () => {
   assert.equal(calibration.sample({ t: 50, depth: 0 }, false), null);
   assert.equal(calibration.sample({ t: 60, depth: 5 }), null);
   assert.deepEqual(calibration.sample({ t: 70, depth: 0 }), { phase: "normal", count: 1 });
+});
+
+test("counts presses that reach the configured actuation point and then release", () => {
+  const calibration = createIntentCalibration(100, intentDepths(3));
+  calibration.sample({ t: 0, depth: 0 });
+  calibration.sample({ t: 10, depth: 2 });
+  assert.equal(calibration.sample({ t: 20, depth: 0 }), null);
+  calibration.sample({ t: 30, depth: 3 });
+  assert.deepEqual(calibration.sample({ t: 40, depth: 0 }), { phase: "normal", count: 1 });
+  const trigger = createIntentTrigger(100, intentDepths(3));
+  trigger.sample({ t: 0, depth: 0 });
+  assert.equal(trigger.sample({ t: 8, depth: 2 }), null);
+  assert.equal(trigger.sample({ t: 16, depth: 3 }), "early");
 });
 
 test("the selected speed controls the early actuation decision", () => {

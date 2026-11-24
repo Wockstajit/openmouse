@@ -1,6 +1,6 @@
 import { displayText } from "../../i18n/index";
 import { useUiLocale } from "../../shared/ui-locale";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import * as control from "../../device/controller";
 import { t, tp } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
@@ -346,9 +346,19 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
   const state = snapshot.analogTuning;
   const showApply = !snapshot.preferences.instantFlash;
   const [intent, setIntent] = useState(() => loadIntentPreferences(localStorage, device));
+  const actuation = state.mode === "both"
+    ? [state.both.actuation, state.both.actuation] as const
+    : [state.left.actuation, state.right.actuation] as const;
+  const actuationKey = actuation.join(":");
+  const previousActuation = useRef(actuationKey);
   const changeIntent = useCallback((update: Partial<IntentPreferences>) => {
     setIntent((current) => ({ ...current, ...update }));
   }, []);
+  useEffect(() => {
+    if (previousActuation.current === actuationKey) return;
+    previousActuation.current = actuationKey;
+    changeIntent({ enabled: false });
+  }, [actuationKey, changeIntent]);
   useEffect(() => saveIntentPreferences(localStorage, device, intent), [device, intent]);
 
   return (
@@ -360,7 +370,8 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
         <div className="setting-heading superstrike-tuning-heading"><div><h2>{displayText(locale, "HITS Tuning")}</h2></div></div>
         <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} intentSpeed={intent.speed} />
         <PressMeter actuation={[state.left.actuation, state.right.actuation]} />
-        <IntentClickControls locale={locale} preferences={intent} onChange={changeIntent} />
+        <IntentClickControls key={actuationKey} locale={locale} preferences={intent}
+          actuation={actuation} maxActuation={tuning.maxActuation} onChange={changeIntent} />
         <div className="superstrike-tabs" role="tablist" aria-label={displayText(locale, "HITS tuning mode")}>
           {(["both", "independent"] as const).map((mode) => (
             <button
