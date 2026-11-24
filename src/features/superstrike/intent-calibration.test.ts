@@ -31,13 +31,13 @@ test("uses 10 completed normal presses and 10 completed intent presses", () => {
 test("preserves the existing speed when the two rounds cannot be distinguished", () => {
   const { press } = calibrationFixture(125);
   for (let click = 0; click < 19; click++) press(20);
-  assert.deepEqual(press(20), { phase: "failed", range: [100, 100] });
+  assert.deepEqual(press(20), { phase: "failed" });
 });
 
 test("does not calibrate from one fast outlier in the intent round", () => {
   const { press } = calibrationFixture(125);
   for (let click = 0; click < 19; click++) press(20);
-  assert.deepEqual(press(10), { phase: "failed", range: [100, 200] });
+  assert.deepEqual(press(10), { phase: "failed" });
 });
 
 test("only counts a press and release made during the active cue", () => {

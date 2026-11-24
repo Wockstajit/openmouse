@@ -371,7 +371,11 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
         <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} intentSpeed={intent.speed} />
         <PressMeter actuation={[state.left.actuation, state.right.actuation]} />
         <IntentClickControls key={actuationKey} locale={locale} preferences={intent}
-          actuation={actuation} maxActuation={tuning.maxActuation} onChange={changeIntent} />
+          actuation={actuation} maxActuation={tuning.maxActuation}
+          hardwareTuning={snapshot.deviceStatus?.analogButtonTuning}
+          hardwareReady={snapshot.captureAvailable && !snapshot.settingInProgress && !snapshot.gameProfileDraft
+            && !snapshot.pending.keys.includes(`analog-button-${intent.side}`)}
+          instantFlash={!showApply} onChange={changeIntent} />
         <div className="superstrike-tabs" role="tablist" aria-label={displayText(locale, "HITS tuning mode")}>
           {(["both", "independent"] as const).map((mode) => (
             <button

@@ -8,7 +8,7 @@ const MAX_ERRORS_PER_ROUND = 2;
 export type IntentCalibrationProgress =
   | { phase: "normal" | "intent"; count: number }
   | { phase: "done"; speed: number; range: readonly [number, number] }
-  | { phase: "failed"; range: readonly [number, number] | null };
+  | { phase: "failed" };
 
 function calibratedSpeed(normal: readonly number[], intent: readonly number[], currentSpeed: number): number | null {
   let best: number | null = null;
@@ -90,7 +90,7 @@ export function createIntentCalibration(currentSpeed: number, depths = intentDep
       const speed = calibratedSpeed(normal, intent, currentSpeed);
       const measured = intent.filter((value) => value > 0);
       const range = measured.length ? [Math.round(Math.min(...measured)), Math.round(Math.max(...measured))] as const : null;
-      return speed === null || range === null ? { phase: "failed", range } : { phase: "done", speed, range };
+      return speed === null || range === null ? { phase: "failed" } : { phase: "done", speed, range };
     },
   };
 }

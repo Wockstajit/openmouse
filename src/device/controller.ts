@@ -4735,6 +4735,15 @@ export function applyLogitechAnalogButton(button: 0 | 1): void {
   stageAnalogButton(button, button === 0 ? analogTuning.left : analogTuning.right);
 }
 
+export function stageLogitechFixedActuation(button: 0 | 1, actuation: number): void {
+  const tuning = latestDeviceStatus?.analogButtonTuning;
+  const current = tuning?.buttons[button];
+  if (!logitechClient() || !tuning || !current || settingInProgress || gameProfileDraft
+    || !Number.isInteger(actuation) || actuation <= current.actuation || actuation > tuning.maxActuation
+    || isPendingChange(`analog-button-${button}`)) return;
+  stageAnalogButton(button, { ...current, actuation });
+}
+
 function magneticClient(): MagneticButtonClient | null {
   const client = activeSettingsClient();
   const magnetic = CM()?.isMagneticButtonClient;

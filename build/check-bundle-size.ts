@@ -55,7 +55,9 @@ export const BUDGET_BYTES: Record<string, number> = {
   ".css": 179_000,
   // Intent cue retries, consistency checks, measured ranges and translations
   // add 4,405 bytes of JS, for 4,023,637 bytes in the production build.
-  ".js": 4_025_000,
+  // Fixed HITS step control and localized hardware status add 3,585 bytes of JS.
+  // Measured: 4,027,222 bytes.
+  ".js": 4_029_000,
 };
 
 // main-*.js measured 1,511,619 bytes right after the split (posthog ~377 kB

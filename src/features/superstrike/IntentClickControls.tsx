@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { subscribeAnalogPress } from "../../device/controller";
+import { stageLogitechFixedActuation, subscribeAnalogPress } from "../../device/controller";
+import type { ControlSnapshot } from "../../device/types";
 import { t, tp } from "../../i18n/index";
 import { StepperSlider, SwitchButton } from "../../shared/ui";
 import type { InterfaceLocale } from "../settings/interface-preferences";
@@ -8,14 +9,17 @@ import {
 } from "./intent-calibration";
 import type { IntentPreferences } from "./intent-preferences";
 import {
-  createIntentTrigger, intentDepths, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED, type IntentOutcome,
+  createIntentTrigger, intentDepths, INTENT_FALLBACK_STEP, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED, type IntentOutcome,
 } from "./intent-trigger";
 
-export function IntentClickControls({ locale, preferences, actuation, maxActuation, onChange }: {
+export function IntentClickControls({ locale, preferences, actuation, maxActuation, hardwareTuning, hardwareReady, instantFlash, onChange }: {
   locale: InterfaceLocale;
   preferences: IntentPreferences;
   actuation: readonly [number, number];
   maxActuation: number;
+  hardwareTuning: NonNullable<ControlSnapshot["deviceStatus"]>["analogButtonTuning"];
+  hardwareReady: boolean;
+  instantFlash: boolean;
   onChange: (update: Partial<IntentPreferences>) => void;
 }): ReactNode {
   const [progress, setProgress] = useState<IntentCalibrationProgress | null>(null);
@@ -31,6 +35,8 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
   const calibrating = progress?.phase === "normal" || progress?.phase === "intent";
   const { enabled, speed, side } = preferences;
   const { early, fallback } = intentDepths(actuation[side], maxActuation);
+  const hardwareStep = hardwareTuning?.buttons[side]?.actuation;
+  const fixedStep = Math.min(INTENT_FALLBACK_STEP, maxActuation);
 
   useEffect(() => {
     if (!calibrating || earlyHeld.current) return;
@@ -100,7 +106,7 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
 
   const speedText = (value: number): string =>
     tp(locale, "intent.speedValue", { speed: new Intl.NumberFormat(locale).format(value) });
-  const range = progress?.phase === "done" || progress?.phase === "failed" ? progress.range : null;
+  const range = progress?.phase === "done" ? progress.range : null;
 
   return (
     <section className="superstrike-intent" aria-labelledby="superstrike-intent-title">
@@ -144,6 +150,17 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
       {enabled && !calibrating && result === "ignored"
         ? <p className="setting-description">{t(locale, "intent.haptics")}</p>
         : null}
+      {hardwareStep !== undefined && !calibrating ? (
+        <div className="superstrike-intent-actions">
+          <p className="setting-description">{tp(locale, "intent.hardwareStep", { step: hardwareStep })}</p>
+          {hardwareStep < fixedStep ? (
+            <button type="button" className="superstrike-apply-button" disabled={!hardwareReady}
+              onClick={() => stageLogitechFixedActuation(side, fixedStep)}>
+              {tp(locale, instantFlash ? "intent.hardwareApply" : "intent.hardwareQueue", { step: fixedStep })}
+            </button>
+          ) : null}
+        </div>
+      ) : null}
       {calibrating ? (
         <div ref={target} className={`hits-test-area superstrike-intent-target${cue ? " is-go" : ""}`}>
           {t(locale, cue ? "intent.goCue" : retry ? "intent.tooEarly" : "intent.waitCue")}
@@ -156,7 +173,7 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
               { count: progress.count, total: INTENT_CALIBRATION_COUNT })
             : progress.phase === "done"
               ? tp(locale, "intent.calibrated", { speed: speedText(progress.speed) })
-              : t(locale, "intent.calibrationFailed")}
+              : tp(locale, "intent.calibrationFailed", { speed: speedText(speed) })}
         </output>
       ) : null}
       {range ? <p className="setting-description">{tp(locale, "intent.range", {
