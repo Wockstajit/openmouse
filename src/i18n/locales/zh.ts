@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const zh: Record<I18nKey, string> = {
+  "intent.title": "自适应点击测试",
+  "intent.instructions": "请用所选按键试一下快速按下、缓慢按到底和轻触。快速按下最早可在第 {early} 档触发。缓慢按下需到达第 {fallback} 档。结果根据按键行程数据估算。",
+  "intent.waiting": "正在等待鼠标报告按键已松开。",
+  "intent.ready": "已就绪，请按下按键。",
+  "intent.early": "提前触发",
+  "intent.fallback": "在备用阈值触发",
+  "intent.ignored": "已忽略轻按",
   "receiver.assign": "分配操作",
   "receiver.search": "搜索操作",
   "receiver.all": "全部",

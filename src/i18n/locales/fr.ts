@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const fr: Record<I18nKey, string> = {
+  "intent.title": "Test de clic adaptatif",
+  "intent.instructions": "Avec le bouton sélectionné, essayez un appui rapide, un appui lent jusqu’au fond, puis un contact léger. Un appui rapide peut déclencher le clic dès le niveau {early}. Un appui lent doit atteindre le niveau {fallback}. Les résultats sont estimés à partir des données de course.",
+  "intent.waiting": "En attente d’un signal indiquant que le bouton est relâché.",
+  "intent.ready": "Prêt. Appuyez sur le bouton.",
+  "intent.early": "Déclenchement anticipé",
+  "intent.fallback": "Déclenchement au seuil de secours",
+  "intent.ignored": "Appui léger ignoré",
   "receiver.assign": "Attribuer une action",
   "receiver.search": "Rechercher des actions",
   "receiver.all": "Tout",

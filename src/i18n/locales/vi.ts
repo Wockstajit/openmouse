@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const vi: Record<I18nKey, string> = {
+  "intent.title": "Thử nghiệm nhấp thích ứng",
+  "intent.instructions": "Với nút đã chọn, hãy thử nhấn nhanh, nhấn chậm hết hành trình và chạm nhẹ. Nhấn nhanh có thể kích hoạt từ mức {early}. Nhấn chậm phải đạt mức {fallback}. Kết quả được ước tính từ dữ liệu hành trình nút.",
+  "intent.waiting": "Đang chờ chuột báo nút đã được nhả.",
+  "intent.ready": "Đã sẵn sàng. Hãy nhấn nút.",
+  "intent.early": "Kích hoạt sớm",
+  "intent.fallback": "Kích hoạt tại ngưỡng dự phòng",
+  "intent.ignored": "Bỏ qua lần nhấn nhẹ",
   "receiver.assign": "Gán thao tác",
   "receiver.search": "Tìm thao tác",
   "receiver.all": "Tất cả",

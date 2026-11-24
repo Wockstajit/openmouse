@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const pt: Record<I18nKey, string> = {
+  "intent.title": "Teste de clique adaptativo",
+  "intent.instructions": "Com o botão selecionado, experimente pressionar rápido, pressionar devagar até o fim e tocar de leve. Pressões rápidas podem acionar a partir do nível {early}. Pressões lentas devem chegar ao nível {fallback}. Os resultados são estimativas baseadas nos dados de curso.",
+  "intent.waiting": "Aguardando o mouse informar que o botão está solto.",
+  "intent.ready": "Pronto. Pressione o botão.",
+  "intent.early": "Acionamento antecipado",
+  "intent.fallback": "Acionamento no limite alternativo",
+  "intent.ignored": "Pressão leve ignorada",
   "receiver.assign": "Atribuir uma ação",
   "receiver.search": "Pesquisar ações",
   "receiver.all": "Todas",

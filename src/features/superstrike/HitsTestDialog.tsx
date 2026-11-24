@@ -1,9 +1,10 @@
 import { displayText } from "../../i18n/index";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as control from "../../device/controller";
-import { t } from "../../i18n/index";
+import { t, tp } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
 import { CONVENTIONAL_STEP, savedMs, stepTimes, type DepthSample } from "./hits-test";
+import { createIntentTrigger, INTENT_EARLY_STEP, INTENT_FALLBACK_STEP, type IntentOutcome } from "./intent-trigger";
 
 const ROUNDS = 1;
 // After the press, wait for the rest of its depth reports before comparing.
@@ -44,6 +45,8 @@ export function HitsTestDialog({
   const [phase, setPhase] = useState<Phase>("idle");
   const [rounds, setRounds] = useState<Round[]>([]);
   const [note, setNote] = useState("");
+  const [intentOpen, setIntentOpen] = useState(false);
+  const [intentResult, setIntentResult] = useState<IntentOutcome | "waiting" | "ready">("waiting");
   const roundsRef = useRef<Round[]>([]);
   const samples = useRef<DepthSample[]>([]);
   const goAt = useRef(0);
@@ -55,6 +58,7 @@ export function HitsTestDialog({
 
   const reset = (): void => {
     window.clearTimeout(timer.current);
+    goAt.current = 0;
     roundsRef.current = [];
     setRounds([]);
     setNote("");
@@ -72,9 +76,21 @@ export function HitsTestDialog({
   useEffect(() => {
     if (!open) return;
     return control.subscribeAnalogPress((left, right) => {
-      samples.current.push({ t: performance.now(), depth: sideRef.current === 0 ? left : right });
+      if (goAt.current) samples.current.push({ t: performance.now(), depth: sideRef.current === 0 ? left : right });
     });
   }, [open]);
+
+  useEffect(() => {
+    setIntentResult("waiting");
+    if (!open || !intentOpen) return;
+    const trigger = createIntentTrigger();
+    return control.subscribeAnalogPress((left, right) => {
+      const depth = side === 0 ? left : right;
+      const outcome = trigger.sample({ t: performance.now(), depth });
+      if (outcome) setIntentResult(outcome);
+      else if (depth === 0) setIntentResult((result) => result === "waiting" ? "ready" : result);
+    });
+  }, [open, intentOpen, side]);
 
   const start = (): void => {
     window.clearTimeout(timer.current);
@@ -104,6 +120,7 @@ export function HitsTestDialog({
       timer.current = window.setTimeout(() => {
         const saved = savedMs(samples.current, actuationRef.current[sideRef.current]);
         roundsRef.current = [...roundsRef.current, { reaction, saved, steps: stepTimes(samples.current, goAt.current) }];
+        goAt.current = 0;
         setRounds(roundsRef.current);
         if (roundsRef.current.length >= ROUNDS) setPhase("done");
         else start();
@@ -191,6 +208,13 @@ export function HitsTestDialog({
               </span>
             ) : label}
           </button>
+          <details className="hits-intent-test" open={intentOpen} onToggle={(event) => setIntentOpen(event.currentTarget.open)}>
+            <summary>{t(locale, "intent.title")}</summary>
+            <p className="setting-description">
+              {tp(locale, "intent.instructions", { early: INTENT_EARLY_STEP, fallback: INTENT_FALLBACK_STEP })}
+            </p>
+            <output aria-live="polite">{t(locale, `intent.${intentResult}`)}</output>
+          </details>
         </div>
         <div className="import-hits-actions">
           <button type="button" className="connect-button" onClick={onClose}>{t(locale, "common.close")}</button>

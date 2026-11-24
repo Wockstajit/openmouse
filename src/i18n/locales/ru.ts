@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ru: Record<I18nKey, string> = {
+  "intent.title": "Тест адаптивного клика",
+  "intent.instructions": "Для выбранной кнопки попробуйте быстрое нажатие, медленное нажатие до упора и лёгкое касание. Быстрое нажатие может сработать с уровня {early}. Медленное должно достичь уровня {fallback}. Результаты оценены по данным о ходе кнопки.",
+  "intent.waiting": "Ожидание сигнала мыши об отпущенной кнопке.",
+  "intent.ready": "Готово. Нажмите кнопку.",
+  "intent.early": "Раннее срабатывание",
+  "intent.fallback": "Срабатывание на резервном пороге",
+  "intent.ignored": "Лёгкое нажатие пропущено",
   "receiver.assign": "Назначить действие",
   "receiver.search": "Поиск действий",
   "receiver.all": "Все",

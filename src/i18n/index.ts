@@ -1,6 +1,13 @@
 import type { InterfaceLocale } from "../features/settings/interface-preferences";
 
 const en = {
+  "intent.title": "Adaptive click test",
+  "intent.instructions": "Try a quick press, a slow full press, and a light touch with the selected button. Fast presses can trigger from step {early}. Slow presses must reach step {fallback}. Results are estimates from the travel reports.",
+  "intent.waiting": "Waiting for the mouse to report a released button.",
+  "intent.ready": "Ready. Try a press.",
+  "intent.early": "Early actuation",
+  "intent.fallback": "Fallback actuation",
+  "intent.ignored": "Light press ignored",
   "receiver.assign": "Assign an action",
   "receiver.search": "Search actions",
   "receiver.all": "All",

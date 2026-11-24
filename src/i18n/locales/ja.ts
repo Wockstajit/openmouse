@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ja: Record<I18nKey, string> = {
+  "intent.title": "適応型クリックテスト",
+  "intent.instructions": "選択したボタンで、素早く押す、ゆっくり最後まで押す、軽く触れる、の3つを試してください。素早く押すとステップ {early} から反応します。ゆっくり押す場合はステップ {fallback} に達する必要があります。結果はボタンの移動データに基づく推定です。",
+  "intent.waiting": "マウスからボタンが離された状態の報告を待っています。",
+  "intent.ready": "準備完了。ボタンを押してください。",
+  "intent.early": "早期作動",
+  "intent.fallback": "予備しきい値で作動",
+  "intent.ignored": "軽い押下を無視",
   "receiver.assign": "操作を割り当て",
   "receiver.search": "操作を検索",
   "receiver.all": "すべて",

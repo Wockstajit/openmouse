@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ar: Record<I18nKey, string> = {
+  "intent.title": "اختبار النقر التكيفي",
+  "intent.instructions": "جرّب ضغطة سريعة، وضغطة بطيئة حتى النهاية، ولمسة خفيفة بالزر المحدد. يمكن أن تعمل الضغطة السريعة من المستوى {early}. يجب أن تصل الضغطة البطيئة إلى المستوى {fallback}. النتائج تقديرية وتستند إلى تقارير حركة الزر.",
+  "intent.waiting": "بانتظار إشارة من الماوس تفيد بتحرير الزر.",
+  "intent.ready": "جاهز. جرّب الضغط.",
+  "intent.early": "تفعيل مبكر",
+  "intent.fallback": "تفعيل عند الحد الاحتياطي",
+  "intent.ignored": "تم تجاهل الضغطة الخفيفة",
   "receiver.assign": "تعيين إجراء",
   "receiver.search": "البحث عن إجراءات",
   "receiver.all": "الكل",

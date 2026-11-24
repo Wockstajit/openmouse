@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const tr: Record<I18nKey, string> = {
+  "intent.title": "Uyarlanabilir tıklama testi",
+  "intent.instructions": "Seçili düğmeye hızlıca basmayı, yavaşça sonuna kadar basmayı ve hafifçe dokunmayı deneyin. Hızlı basışlar {early}. kademeden itibaren tetiklenebilir. Yavaş basışların {fallback}. kademeye ulaşması gerekir. Sonuçlar düğme hareketi verilerine dayalı tahminlerdir.",
+  "intent.waiting": "Farenin düğmenin bırakıldığını bildirmesi bekleniyor.",
+  "intent.ready": "Hazır. Düğmeye basmayı deneyin.",
+  "intent.early": "Erken tetikleme",
+  "intent.fallback": "Yedek eşikte tetikleme",
+  "intent.ignored": "Hafif basış yok sayıldı",
   "receiver.assign": "Bir eylem ata",
   "receiver.search": "Eylem ara",
   "receiver.all": "Tümü",

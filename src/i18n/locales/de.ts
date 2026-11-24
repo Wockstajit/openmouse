@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const de: Record<I18nKey, string> = {
+  "intent.title": "Adaptiver Klicktest",
+  "intent.instructions": "Drücke die gewählte Taste einmal schnell, einmal langsam ganz durch und einmal leicht. Schnelle Betätigungen können ab Stufe {early} auslösen. Langsame müssen Stufe {fallback} erreichen. Die Ergebnisse sind Schätzungen anhand der Wegdaten.",
+  "intent.waiting": "Warte darauf, dass die Maus eine losgelassene Taste meldet.",
+  "intent.ready": "Bereit. Drücke die Taste.",
+  "intent.early": "Frühe Auslösung",
+  "intent.fallback": "Auslösung an der Ersatzschwelle",
+  "intent.ignored": "Leichter Druck ignoriert",
   "receiver.assign": "Aktion zuweisen",
   "receiver.search": "Aktionen suchen",
   "receiver.all": "Alle",

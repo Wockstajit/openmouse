@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ko: Record<I18nKey, string> = {
+  "intent.title": "적응형 클릭 테스트",
+  "intent.instructions": "선택한 버튼을 빠르게 누르기, 천천히 끝까지 누르기, 가볍게 건드리기를 각각 시도하세요. 빠르게 누르면 {early}단계부터 작동할 수 있습니다. 천천히 누르면 {fallback}단계에 도달해야 합니다. 결과는 버튼 이동 데이터를 바탕으로 한 추정치입니다.",
+  "intent.waiting": "마우스가 버튼을 놓은 상태를 보고하기를 기다리는 중입니다.",
+  "intent.ready": "준비되었습니다. 버튼을 눌러 보세요.",
+  "intent.early": "조기 작동",
+  "intent.fallback": "예비 임계값에서 작동",
+  "intent.ignored": "가벼운 누름 무시",
   "receiver.assign": "동작 지정",
   "receiver.search": "동작 검색",
   "receiver.all": "전체",

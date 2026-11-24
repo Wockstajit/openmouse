@@ -3,6 +3,13 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const es: Record<I18nKey, string> = {
+  "intent.title": "Prueba de clic adaptativo",
+  "intent.instructions": "Con el botón seleccionado, prueba una pulsación rápida, una lenta hasta el fondo y un toque leve. Las pulsaciones rápidas pueden activarse desde el nivel {early}. Las lentas deben llegar al nivel {fallback}. Los resultados son estimaciones basadas en los datos de recorrido.",
+  "intent.waiting": "Esperando a que el ratón indique que se ha soltado el botón.",
+  "intent.ready": "Listo. Pulsa el botón.",
+  "intent.early": "Activación temprana",
+  "intent.fallback": "Activación en el umbral alternativo",
+  "intent.ignored": "Pulsación leve ignorada",
   "receiver.assign": "Asignar una acción",
   "receiver.search": "Buscar acciones",
   "receiver.all": "Todo",
