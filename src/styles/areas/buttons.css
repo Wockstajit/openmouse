@@ -50,6 +50,8 @@
 .superstrike-press-meter i[data-on="true"] { background: var(--accent); }
 .superstrike-press-meter i[data-actuation="true"]::after { content: ""; position: absolute; inset: -3px 0; border: 1px solid var(--text-2); border-radius: var(--r-xs); }
 .superstrike-intent { display: grid; gap: 12px; border-block: 1px solid var(--line-1); padding-block: 12px; }
+.superstrike-intent-details > summary { cursor: pointer; color: var(--text-2); font-size: var(--fs-meta); font-weight: 550; }
+.superstrike-intent-details[open] > div { display: grid; gap: 12px; padding-block-start: 12px; }
 .superstrike-intent-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .superstrike-intent-heading h3 { margin-block: 0 4px; font-size: var(--fs-body); font-weight: 600; }
 .superstrike-intent-heading .switch-button { flex: none; }
