@@ -43,25 +43,27 @@ function calibratedSpeed(normal: readonly number[], intent: readonly number[], c
   return best;
 }
 
-/** Capture complete press/release cycles and score the same speed signal as live detection. */
-export function createIntentCalibration(currentSpeed: number, depths = intentDepths()) {
-  const normal: number[] = [];
-  const intent: number[] = [];
+function createPressSampler(depths: ReturnType<typeof intentDepths>) {
   let previous: DepthSample | undefined;
   let sawRelease = false;
   let reachedActuation = false;
   let peakSpeed = 0;
 
+  const reset = (): void => {
+    sawRelease = previous?.depth === 0;
+    reachedActuation = false;
+    peakSpeed = 0;
+  };
+
   return {
-    sample(current: DepthSample, cueActive = true): IntentCalibrationProgress | null {
-      if (intent.length >= INTENT_CALIBRATION_COUNT || !validDepthSample(current)) return null;
+    reset,
+    sample(current: DepthSample, cueActive: boolean): number | null {
+      if (!validDepthSample(current)) return null;
       const prior = previous;
       if (prior && current.t <= prior.t) return null;
       previous = current;
       if (!cueActive) {
-        sawRelease = current.depth === 0;
-        reachedActuation = false;
-        peakSpeed = 0;
+        reset();
         return null;
       }
       if (current.depth > 0) {
@@ -73,15 +75,34 @@ export function createIntentCalibration(currentSpeed: number, depths = intentDep
         return null;
       }
 
-      sawRelease = true;
-      if (!reachedActuation) {
-        peakSpeed = 0;
-        return null;
-      }
+      const speed = reachedActuation ? peakSpeed : null;
+      reset();
+      return speed;
+    },
+  };
+}
+
+/** Score either button's completed press. Each color cue accepts at most one. */
+export function createIntentCalibration(
+  currentSpeed: number,
+  depths: readonly [ReturnType<typeof intentDepths>, ReturnType<typeof intentDepths>] = [intentDepths(), intentDepths()],
+) {
+  const normal: number[] = [];
+  const intent: number[] = [];
+  const left = createPressSampler(depths[0]);
+  const right = createPressSampler(depths[1]);
+
+  return {
+    sample(t: number, travel: readonly [number, number], cueActive = true): IntentCalibrationProgress | null {
+      if (intent.length >= INTENT_CALIBRATION_COUNT) return null;
+      const leftSpeed = left.sample({ t, depth: travel[0] }, cueActive);
+      const rightSpeed = right.sample({ t, depth: travel[1] }, cueActive);
+      const pressSpeed = leftSpeed ?? rightSpeed;
+      if (pressSpeed === null) return null;
+      left.reset();
+      right.reset();
       const group = normal.length < INTENT_CALIBRATION_COUNT ? normal : intent;
-      group.push(peakSpeed);
-      reachedActuation = false;
-      peakSpeed = 0;
+      group.push(pressSpeed);
       if (intent.length < INTENT_CALIBRATION_COUNT) {
         return normal.length < INTENT_CALIBRATION_COUNT
           ? { phase: "normal", count: normal.length }

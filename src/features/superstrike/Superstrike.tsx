@@ -1,6 +1,6 @@
 import { displayText } from "../../i18n/index";
 import { useUiLocale } from "../../shared/ui-locale";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import * as control from "../../device/controller";
 import { t, tp } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
@@ -21,7 +21,7 @@ import { BunnyHop } from "../devices/cards/PerformanceCards";
 import { DeleteHitsPresetDialog } from "./DeleteHitsPresetDialog";
 import { HitsTestDialog } from "./HitsTestDialog";
 import { IntentClickControls } from "./IntentClickControls";
-import { loadIntentPreferences, saveIntentPreferences, type IntentPreferences } from "./intent-preferences";
+import { loadIntentSpeed, saveIntentSpeed } from "./intent-preferences";
 import { SaveHitsPresetDialog } from "./SaveHitsPresetDialog";
 
 function SuperstrikeSteps({
@@ -98,8 +98,8 @@ function PressMeter({ actuation }: { actuation: [number, number] }): ReactNode {
 }
 
 // Saved setups for both buttons, in this browser, and a short code to share one.
-function HitsPresets({ state, limits, locale, canAdjust, intentSpeed }: {
-  state: AnalogTuningState; limits: HitsLimits; locale: InterfaceLocale; canAdjust: boolean; intentSpeed: number;
+function HitsPresets({ state, limits, locale, canAdjust }: {
+  state: AnalogTuningState; limits: HitsLimits; locale: InterfaceLocale; canAdjust: boolean;
 }): ReactNode {
   const [presets, setPresets] = useState<HitsPreset[]>(() => loadHitsPresets(localStorage));
   const [note, setNote] = useState("");
@@ -215,7 +215,7 @@ function HitsPresets({ state, limits, locale, canAdjust, intentSpeed }: {
           setDeleting(null);
         }}
       />
-      <button type="button" className="icon-button" onClick={() => setTesting(true)}> {displayText(locale, "Test")} </button>
+      <button type="button" className="icon-button" onClick={() => setTesting(true)}> {displayText(locale, "HITS speed test")} </button>
       {state.mode === "independent" ? (
         <>
           <button type="button" className="icon-button" onClick={() => { const { left } = current(); load({ left, right: left }, "left copied to right"); }}> {displayText(locale, "Left to right")} </button>
@@ -228,7 +228,6 @@ function HitsPresets({ state, limits, locale, canAdjust, intentSpeed }: {
         locale={locale}
         actuation={state.mode === "both" ? [state.both.actuation, state.both.actuation] : [state.left.actuation, state.right.actuation]}
         maxActuation={limits.maxActuation}
-        intentSpeed={intentSpeed}
         canAdjust={canAdjust}
         onAdjust={(side, value) => control.setAnalogTuningValue(state.mode === "both" ? "both" : side === 0 ? "left" : "right", "actuation", value)}
         onClose={() => setTesting(false)}
@@ -345,21 +344,11 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
   const locale = snapshot.preferences.locale;
   const state = snapshot.analogTuning;
   const showApply = !snapshot.preferences.instantFlash;
-  const [intent, setIntent] = useState(() => loadIntentPreferences(localStorage, device));
+  const [intentSpeed, setIntentSpeed] = useState(() => loadIntentSpeed(localStorage, device));
   const actuation = state.mode === "both"
     ? [state.both.actuation, state.both.actuation] as const
     : [state.left.actuation, state.right.actuation] as const;
-  const actuationKey = actuation.join(":");
-  const previousActuation = useRef(actuationKey);
-  const changeIntent = useCallback((update: Partial<IntentPreferences>) => {
-    setIntent((current) => ({ ...current, ...update }));
-  }, []);
-  useEffect(() => {
-    if (previousActuation.current === actuationKey) return;
-    previousActuation.current = actuationKey;
-    changeIntent({ enabled: false });
-  }, [actuationKey, changeIntent]);
-  useEffect(() => saveIntentPreferences(localStorage, device, intent), [device, intent]);
+  useEffect(() => saveIntentSpeed(localStorage, device, intentSpeed), [device, intentSpeed]);
 
   return (
     // A card in the Buttons tab's card list, so the mouse panel sits beside it.
@@ -368,11 +357,8 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
     <div id="logitech-analog-button-settings">
       <article className="setting-card superstrike-tuning-card">
         <div className="setting-heading superstrike-tuning-heading"><div><h2>{displayText(locale, "HITS Tuning")}</h2></div></div>
-        <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} intentSpeed={intent.speed} />
+        <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} />
         <PressMeter actuation={[state.left.actuation, state.right.actuation]} />
-        <IntentClickControls key={actuationKey} locale={locale} preferences={intent}
-          actuation={actuation} maxActuation={tuning.maxActuation}
-          hardwareTuning={snapshot.deviceStatus?.analogButtonTuning} onChange={changeIntent} />
         <div className="superstrike-tabs" role="tablist" aria-label={displayText(locale, "HITS tuning mode")}>
           {(["both", "independent"] as const).map((mode) => (
             <button
@@ -423,6 +409,8 @@ function SuperstrikeSettings({ snapshot, tuning, device }: {
             ) : null}
           </fieldset>
         </div>
+        <IntentClickControls key={actuation.join(":")} locale={locale} speed={intentSpeed}
+          actuation={actuation} maxActuation={tuning.maxActuation} onSpeedChange={setIntentSpeed} />
       </article>
     </div>
     {/* Bunny Hop is a per-profile debounce, not a HITS setting, so it is its own card. */}

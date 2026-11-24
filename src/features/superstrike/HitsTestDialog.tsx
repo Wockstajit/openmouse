@@ -1,10 +1,9 @@
 import { displayText } from "../../i18n/index";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as control from "../../device/controller";
-import { t, tp } from "../../i18n/index";
+import { t } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
 import { CONVENTIONAL_STEP, savedMs, stepTimes, type DepthSample } from "./hits-test";
-import { createIntentTrigger, intentDepths, type IntentOutcome } from "./intent-trigger";
 
 const ROUNDS = 1;
 // After the press, wait for the rest of its depth reports before comparing.
@@ -26,7 +25,6 @@ export function HitsTestDialog({
   locale,
   actuation,
   maxActuation,
-  intentSpeed,
   canAdjust,
   onAdjust,
   onClose,
@@ -36,7 +34,6 @@ export function HitsTestDialog({
   /** Actuation step of the left and right buttons. */
   actuation: [number, number];
   maxActuation: number;
-  intentSpeed: number;
   /** False while a change would only be staged, not yet on the mouse. */
   canAdjust: boolean;
   onAdjust: (side: 0 | 1, value: number) => void;
@@ -47,8 +44,6 @@ export function HitsTestDialog({
   const [phase, setPhase] = useState<Phase>("idle");
   const [rounds, setRounds] = useState<Round[]>([]);
   const [note, setNote] = useState("");
-  const [intentOpen, setIntentOpen] = useState(false);
-  const [intentResult, setIntentResult] = useState<IntentOutcome | "waiting" | "ready">("waiting");
   const roundsRef = useRef<Round[]>([]);
   const samples = useRef<DepthSample[]>([]);
   const goAt = useRef(0);
@@ -57,7 +52,6 @@ export function HitsTestDialog({
   sideRef.current = side;
   const actuationRef = useRef(actuation);
   actuationRef.current = actuation;
-  const { early, fallback } = intentDepths(actuation[side], maxActuation);
 
   const reset = (): void => {
     window.clearTimeout(timer.current);
@@ -82,18 +76,6 @@ export function HitsTestDialog({
       if (goAt.current) samples.current.push({ t: performance.now(), depth: sideRef.current === 0 ? left : right });
     });
   }, [open]);
-
-  useEffect(() => {
-    setIntentResult("waiting");
-    if (!open || !intentOpen) return;
-    const trigger = createIntentTrigger(intentSpeed, { early, fallback });
-    return control.subscribeAnalogPress((left, right) => {
-      const depth = side === 0 ? left : right;
-      const outcome = trigger.sample({ t: performance.now(), depth });
-      if (outcome) setIntentResult(outcome);
-      else if (depth === 0) setIntentResult((result) => result === "waiting" ? "ready" : result);
-    });
-  }, [open, intentOpen, side, intentSpeed, early, fallback]);
 
   const start = (): void => {
     window.clearTimeout(timer.current);
@@ -211,14 +193,6 @@ export function HitsTestDialog({
               </span>
             ) : label}
           </button>
-          <details className="hits-intent-test" open={intentOpen} onToggle={(event) => setIntentOpen(event.currentTarget.open)}>
-            <summary>{t(locale, "intent.title")}</summary>
-            <p className="setting-description">
-              {tp(locale, "intent.instructions", { early, fallback })}
-            </p>
-            <output aria-live="polite">{t(locale, `intent.${intentResult}`)}</output>
-            {intentResult === "ignored" ? <p className="setting-description">{t(locale, "intent.haptics")}</p> : null}
-          </details>
         </div>
         <div className="import-hits-actions">
           <button type="button" className="connect-button" onClick={onClose}>{t(locale, "common.close")}</button>

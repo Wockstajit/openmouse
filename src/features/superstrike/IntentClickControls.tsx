@@ -1,28 +1,27 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { subscribeAnalogPress } from "../../device/controller";
-import type { ControlSnapshot } from "../../device/types";
 import { t, tp } from "../../i18n/index";
 import { StepperSlider, SwitchButton } from "../../shared/ui";
 import type { InterfaceLocale } from "../settings/interface-preferences";
 import {
   createIntentCalibration, INTENT_CALIBRATION_COUNT, type IntentCalibrationProgress,
 } from "./intent-calibration";
-import type { IntentPreferences } from "./intent-preferences";
 import {
   createIntentTrigger, intentDepths, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED, type IntentOutcome,
 } from "./intent-trigger";
 
-export function IntentClickControls({ locale, preferences, actuation, maxActuation, hardwareTuning, onChange }: {
+type PressStatus = IntentOutcome | "waiting" | "ready";
+
+export function IntentClickControls({ locale, speed, actuation, maxActuation, onSpeedChange }: {
   locale: InterfaceLocale;
-  preferences: IntentPreferences;
+  speed: number;
   actuation: readonly [number, number];
   maxActuation: number;
-  hardwareTuning: NonNullable<ControlSnapshot["deviceStatus"]>["analogButtonTuning"];
-  onChange: (update: Partial<IntentPreferences>) => void;
+  onSpeedChange: (speed: number) => void;
 }): ReactNode {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [progress, setProgress] = useState<IntentCalibrationProgress | null>(null);
-  const [result, setResult] = useState<IntentOutcome | "waiting" | "ready">("waiting");
+  const [results, setResults] = useState<[PressStatus, PressStatus]>(["waiting", "waiting"]);
   const [cue, setCue] = useState(false);
   const [retry, setRetry] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
@@ -32,9 +31,7 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
   const target = useRef<HTMLDivElement>(null);
   const calibration = useRef<ReturnType<typeof createIntentCalibration> | null>(null);
   const calibrating = progress?.phase === "normal" || progress?.phase === "intent";
-  const { enabled, speed, side } = preferences;
-  const { early, fallback } = intentDepths(actuation[side], maxActuation);
-  const hardwareStep = hardwareTuning?.buttons[side]?.actuation;
+  const [leftActuation, rightActuation] = actuation;
 
   useEffect(() => {
     if (!calibrating || earlyHeld.current) return;
@@ -49,25 +46,26 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
   }, [calibrating, progress, retryCount]);
 
   useEffect(() => {
-    if (!detailsOpen || (!enabled && !calibrating)) return;
-    const trigger = createIntentTrigger(speed, { early, fallback });
-    let waiting = true;
-    setResult("waiting");
+    if (!detailsOpen) return;
+    const leftTrigger = createIntentTrigger(speed, intentDepths(leftActuation, maxActuation));
+    const rightTrigger = createIntentTrigger(speed, intentDepths(rightActuation, maxActuation));
+    let leftWaiting = true;
+    let rightWaiting = true;
+    setResults(["waiting", "waiting"]);
     return subscribeAnalogPress((left, right) => {
-      const depth = side === 0 ? left : right;
-      const sample = { t: performance.now(), depth };
+      const t = performance.now();
       if (calibration.current) {
         const overTarget = target.current?.matches(":hover") === true;
-        if (!cueActive.current && overTarget && depth >= early && !earlyHeld.current) {
+        if (!cueActive.current && overTarget && (left >= leftActuation || right >= rightActuation) && !earlyHeld.current) {
           window.clearTimeout(cueTimer.current);
           earlyHeld.current = true;
           setRetry(true);
         }
-        if (earlyHeld.current && depth === 0) {
+        if (earlyHeld.current && left === 0 && right === 0) {
           earlyHeld.current = false;
           setRetryCount((count) => count + 1);
         }
-        const next = calibration.current.sample(sample, cueActive.current && overTarget);
+        const next = calibration.current.sample(t, [left, right], cueActive.current && overTarget);
         if (!next) return;
         cueActive.current = false;
         setCue(false);
@@ -75,22 +73,24 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
         setProgress(next);
         if (next.phase === "done" || next.phase === "failed") {
           calibration.current = null;
-          if (next.phase === "done") onChange({ speed: next.speed, enabled: false });
+          if (next.phase === "done") onSpeedChange(next.speed);
         }
-      } else if (enabled) {
-        const outcome = trigger.sample(sample);
-        if (outcome) setResult(outcome);
-        else if (waiting && depth === 0) {
-          waiting = false;
-          setResult("ready");
-        }
+      } else {
+        const leftResult = leftTrigger.sample({ t, depth: left }) ?? (leftWaiting && left === 0 ? "ready" : null);
+        const rightResult = rightTrigger.sample({ t, depth: right }) ?? (rightWaiting && right === 0 ? "ready" : null);
+        leftWaiting &&= left !== 0;
+        rightWaiting &&= right !== 0;
+        if (leftResult || rightResult) setResults(([previousLeft, previousRight]) => [
+          leftResult ?? previousLeft, rightResult ?? previousRight,
+        ]);
       }
     });
-  }, [detailsOpen, enabled, speed, side, early, fallback, calibrating, onChange]);
+  }, [detailsOpen, speed, leftActuation, rightActuation, maxActuation, calibrating, onSpeedChange]);
 
   const start = (): void => {
-    onChange({ enabled: false });
-    calibration.current = createIntentCalibration(speed, { early, fallback });
+    calibration.current = createIntentCalibration(speed, [
+      intentDepths(leftActuation, maxActuation), intentDepths(rightActuation, maxActuation),
+    ]);
     setProgress({ phase: "normal", count: 0 });
   };
   const cancel = (): void => {
@@ -107,35 +107,22 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
   const range = progress?.phase === "done" ? progress.range : null;
 
   return (
-    <section className="superstrike-intent" aria-label={t(locale, "intent.live")}>
-      <div className="superstrike-intent-actions">
-        <select aria-label={t(locale, "intent.button")} value={side} disabled={calibrating}
-          onChange={(event) => {
-            onChange({ enabled: false, side: event.currentTarget.value === "1" ? 1 : 0 });
-            setProgress(null);
-          }}>
-          <option value={0}>{t(locale, "adv.leftButton")}</option>
-          <option value={1}>{t(locale, "adv.rightButton")}</option>
-        </select>
-        {hardwareStep !== undefined ? (
-          <p className="setting-description">{tp(locale, "intent.hardwareStep", { step: hardwareStep })}</p>
-        ) : null}
+    <section className="superstrike-intent" aria-labelledby="superstrike-intent-title">
+      <div className="superstrike-intent-heading">
+        <div>
+          <h3 id="superstrike-intent-title">{t(locale, "intent.live")}</h3>
+          <p className="setting-description">{t(locale, "intent.scope")}</p>
+        </div>
+        <SwitchButton value={false} label={t(locale, "intent.live")} disabled onChange={() => {}} />
       </div>
       <details className="superstrike-intent-details" onToggle={(event) => {
         const open = event.currentTarget.open;
         setDetailsOpen(open);
         if (!open && calibrating) cancel();
       }}>
-        <summary>{t(locale, "intent.title")}</summary>
-        <div>
-          <div className="superstrike-intent-heading">
-            <div>
-              <h3>{t(locale, "intent.live")}</h3>
-              <p className="setting-description">{t(locale, "intent.scope")}</p>
-              <p className="setting-description">{tp(locale, "intent.depths", { early, fallback })}</p>
-            </div>
-            <SwitchButton value={enabled} label={t(locale, "intent.live")} disabled={calibrating} onChange={(value) => onChange({ enabled: value })} />
-          </div>
+        <summary>{t(locale, "intent.test")}</summary>
+        <div onContextMenu={(event) => event.preventDefault()}>
+          <p className="setting-description">{t(locale, "intent.testBoth")}</p>
           <StepperSlider
             id="superstrike-intent-speed"
             label={t(locale, "intent.speed")}
@@ -148,15 +135,24 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
             disabled={calibrating}
             onCommit={(value) => {
               setProgress(null);
-              onChange({ speed: value, enabled: false });
+              onSpeedChange(value);
             }}
           />
           <div className="superstrike-intent-actions">
             {calibrating
               ? <button type="button" className="superstrike-apply-button" onClick={cancel}>{t(locale, "common.cancel")}</button>
               : <button type="button" className="superstrike-apply-button" onClick={start}>{t(locale, "intent.calibrate")}</button>}
-            {enabled && !calibrating ? <output>{t(locale, `intent.${result}`)}</output> : null}
           </div>
+          {!calibrating ? (
+            <div className="superstrike-intent-results">
+              {(["adv.leftButton", "adv.rightButton"] as const).map((button, index) => (
+                <div key={button}>
+                  <span>{t(locale, button)}</span>
+                  <output>{t(locale, `intent.${results[index]}`)}</output>
+                </div>
+              ))}
+            </div>
+          ) : null}
           {calibrating ? (
             <div ref={target} className={`hits-test-area superstrike-intent-target${cue ? " is-go" : ""}`}>
               {t(locale, cue ? "intent.goCue" : retry ? "intent.tooEarly" : "intent.waitCue")}

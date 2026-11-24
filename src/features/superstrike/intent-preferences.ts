@@ -1,34 +1,23 @@
 import { DEFAULT_INTENT_SPEED, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED } from "./intent-trigger.ts";
 
-export interface IntentPreferences {
-  enabled: boolean;
-  speed: number;
-  side: 0 | 1;
-}
-
 function key(device: string): string {
   return `openmouse-intent-v1:${device}`;
 }
 
-export function loadIntentPreferences(storage: Storage, device: string): IntentPreferences {
-  const defaults: IntentPreferences = { enabled: false, speed: DEFAULT_INTENT_SPEED, side: 0 };
+export function loadIntentSpeed(storage: Storage, device: string): number {
   try {
-    const stored: Partial<IntentPreferences> | null = JSON.parse(storage.getItem(key(device)) ?? "null");
+    const stored: { speed?: unknown } | null = JSON.parse(storage.getItem(key(device)) ?? "null");
     const speed = stored?.speed;
-    return {
-      enabled: stored?.enabled === true,
-      side: stored?.side === 1 ? 1 : 0,
-      speed: typeof speed === "number" && speed >= MIN_INTENT_SPEED && speed <= MAX_INTENT_SPEED
-        && speed % INTENT_SPEED_STEP === 0 ? speed : defaults.speed,
-    };
+    return typeof speed === "number" && speed >= MIN_INTENT_SPEED && speed <= MAX_INTENT_SPEED
+      && speed % INTENT_SPEED_STEP === 0 ? speed : DEFAULT_INTENT_SPEED;
   } catch {
-    return defaults;
+    return DEFAULT_INTENT_SPEED;
   }
 }
 
-export function saveIntentPreferences(storage: Storage, device: string, preferences: IntentPreferences): void {
+export function saveIntentSpeed(storage: Storage, device: string, speed: number): void {
   try {
-    storage.setItem(key(device), JSON.stringify(preferences));
+    storage.setItem(key(device), JSON.stringify({ speed }));
   } catch {
     // The controls still work for the current session when storage is unavailable.
   }
