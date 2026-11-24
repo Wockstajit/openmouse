@@ -20,8 +20,6 @@ export const fr: Record<I18nKey, string> = {
   "intent.calibrated": "Vitesse réglée à {speed}. Activez le clic intentionnel quand vous êtes prêt.",
   "intent.calibrationFailed": "La vitesse reste à {speed}. Les deux séries se chevauchaient trop pour calibrer.",
   "intent.hardwareStep": "Le clic et le retour haptique de la souris utilisent le niveau {step}.",
-  "intent.hardwareApply": "Régler le niveau fixe {step}",
-  "intent.hardwareQueue": "Préparer le niveau fixe {step}",
   "intent.title": "Test de clic adaptatif",
   "intent.instructions": "Avec le bouton sélectionné, essayez un appui rapide, un appui lent jusqu’au fond, puis un contact léger. Un appui rapide peut déclencher le clic dès le niveau {early}. Un appui lent doit atteindre le niveau {fallback}. Les résultats sont estimés à partir des données de course.",
   "intent.waiting": "En attente d’un signal indiquant que le bouton est relâché.",

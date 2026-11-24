@@ -20,8 +20,6 @@ export const zh: Record<I18nKey, string> = {
   "intent.calibrated": "速度已设为 {speed}。准备好后开启意图点击。",
   "intent.calibrationFailed": "速度仍为 {speed}。两轮速度范围重叠太多，无法校准。",
   "intent.hardwareStep": "鼠标在第 {step} 档发出点击和振动。",
-  "intent.hardwareApply": "设为固定第 {step} 档",
-  "intent.hardwareQueue": "待应用固定第 {step} 档",
   "intent.title": "自适应点击测试",
   "intent.instructions": "请用所选按键试一下快速按下、缓慢按到底和轻触。快速按下最早可在第 {early} 档触发。缓慢按下需到达第 {fallback} 档。结果根据按键行程数据估算。",
   "intent.waiting": "正在等待鼠标报告按键已松开。",

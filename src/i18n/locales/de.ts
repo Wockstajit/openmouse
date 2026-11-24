@@ -20,8 +20,6 @@ export const de: Record<I18nKey, string> = {
   "intent.calibrated": "Geschwindigkeit auf {speed} eingestellt. Aktiviere gezielte Klicks, sobald du bereit bist.",
   "intent.calibrationFailed": "Die Geschwindigkeit bleibt bei {speed}. Die beiden Runden überschnitten sich zu stark.",
   "intent.hardwareStep": "Die Maus löst Klick und Haptik auf Stufe {step} aus.",
-  "intent.hardwareApply": "Feste Stufe {step} einstellen",
-  "intent.hardwareQueue": "Feste Stufe {step} vormerken",
   "intent.title": "Adaptiver Klicktest",
   "intent.instructions": "Drücke die gewählte Taste einmal schnell, einmal langsam ganz durch und einmal leicht. Schnelle Betätigungen können ab Stufe {early} auslösen. Langsame müssen Stufe {fallback} erreichen. Die Ergebnisse sind Schätzungen anhand der Wegdaten.",
   "intent.waiting": "Warte darauf, dass die Maus eine losgelassene Taste meldet.",

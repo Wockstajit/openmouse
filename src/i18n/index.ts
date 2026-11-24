@@ -18,8 +18,6 @@ const en = {
   "intent.calibrated": "Speed set to {speed}. Turn on Intent click when ready.",
   "intent.calibrationFailed": "Speed is still {speed}. The two rounds overlapped too much to calibrate.",
   "intent.hardwareStep": "Hardware click and haptics use step {step}.",
-  "intent.hardwareApply": "Set fixed step {step}",
-  "intent.hardwareQueue": "Stage fixed step {step}",
   "intent.title": "Adaptive click test",
   "intent.instructions": "Try a quick press, a slow full press, and a light touch with the selected button. Fast presses can trigger from step {early}. Slow presses must reach step {fallback}. Results are estimates from the travel reports.",
   "intent.waiting": "Waiting for the mouse to report a released button.",

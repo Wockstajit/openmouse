@@ -20,8 +20,6 @@ export const tr: Record<I18nKey, string> = {
   "intent.calibrated": "Hız {speed} olarak ayarlandı. Hazır olduğunuzda niyet tıklamasını açın.",
   "intent.calibrationFailed": "Hız {speed} olarak kaldı. İki turun sonuçları kalibrasyon için fazla örtüştü.",
   "intent.hardwareStep": "Farenin tıklaması ve titreşimi {step}. kademede tetiklenir.",
-  "intent.hardwareApply": "Sabit {step}. kademeyi ayarla",
-  "intent.hardwareQueue": "Sabit {step}. kademeyi uygula listesine al",
   "intent.title": "Uyarlanabilir tıklama testi",
   "intent.instructions": "Seçili düğmeye hızlıca basmayı, yavaşça sonuna kadar basmayı ve hafifçe dokunmayı deneyin. Hızlı basışlar {early}. kademeden itibaren tetiklenebilir. Yavaş basışların {fallback}. kademeye ulaşması gerekir. Sonuçlar düğme hareketi verilerine dayalı tahminlerdir.",
   "intent.waiting": "Farenin düğmenin bırakıldığını bildirmesi bekleniyor.",

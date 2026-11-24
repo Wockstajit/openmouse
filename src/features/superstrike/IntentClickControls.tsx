@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { stageLogitechFixedActuation, subscribeAnalogPress } from "../../device/controller";
+import { subscribeAnalogPress } from "../../device/controller";
 import type { ControlSnapshot } from "../../device/types";
 import { t, tp } from "../../i18n/index";
 import { StepperSlider, SwitchButton } from "../../shared/ui";
@@ -9,17 +9,15 @@ import {
 } from "./intent-calibration";
 import type { IntentPreferences } from "./intent-preferences";
 import {
-  createIntentTrigger, intentDepths, INTENT_FALLBACK_STEP, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED, type IntentOutcome,
+  createIntentTrigger, intentDepths, INTENT_SPEED_STEP, MAX_INTENT_SPEED, MIN_INTENT_SPEED, type IntentOutcome,
 } from "./intent-trigger";
 
-export function IntentClickControls({ locale, preferences, actuation, maxActuation, hardwareTuning, hardwareReady, instantFlash, onChange }: {
+export function IntentClickControls({ locale, preferences, actuation, maxActuation, hardwareTuning, onChange }: {
   locale: InterfaceLocale;
   preferences: IntentPreferences;
   actuation: readonly [number, number];
   maxActuation: number;
   hardwareTuning: NonNullable<ControlSnapshot["deviceStatus"]>["analogButtonTuning"];
-  hardwareReady: boolean;
-  instantFlash: boolean;
   onChange: (update: Partial<IntentPreferences>) => void;
 }): ReactNode {
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -37,7 +35,6 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
   const { enabled, speed, side } = preferences;
   const { early, fallback } = intentDepths(actuation[side], maxActuation);
   const hardwareStep = hardwareTuning?.buttons[side]?.actuation;
-  const fixedStep = Math.min(INTENT_FALLBACK_STEP, maxActuation);
 
   useEffect(() => {
     if (!calibrating || earlyHeld.current) return;
@@ -121,15 +118,7 @@ export function IntentClickControls({ locale, preferences, actuation, maxActuati
           <option value={1}>{t(locale, "adv.rightButton")}</option>
         </select>
         {hardwareStep !== undefined ? (
-          <>
-            <p className="setting-description">{tp(locale, "intent.hardwareStep", { step: hardwareStep })}</p>
-            {hardwareStep < fixedStep ? (
-              <button type="button" className="superstrike-apply-button" disabled={!hardwareReady}
-                onClick={() => stageLogitechFixedActuation(side, fixedStep)}>
-                {tp(locale, instantFlash ? "intent.hardwareApply" : "intent.hardwareQueue", { step: fixedStep })}
-              </button>
-            ) : null}
-          </>
+          <p className="setting-description">{tp(locale, "intent.hardwareStep", { step: hardwareStep })}</p>
         ) : null}
       </div>
       <details className="superstrike-intent-details" onToggle={(event) => {

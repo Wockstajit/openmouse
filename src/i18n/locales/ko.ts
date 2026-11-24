@@ -20,8 +20,6 @@ export const ko: Record<I18nKey, string> = {
   "intent.calibrated": "속도를 {speed}(으)로 설정했습니다. 준비되면 의도 클릭을 켜세요.",
   "intent.calibrationFailed": "속도는 {speed}로 유지됩니다. 두 라운드의 측정값이 너무 많이 겹칩니다.",
   "intent.hardwareStep": "마우스 클릭과 진동은 {step}단계에서 작동합니다.",
-  "intent.hardwareApply": "고정 {step}단계 설정",
-  "intent.hardwareQueue": "고정 {step}단계 적용 대기",
   "intent.title": "적응형 클릭 테스트",
   "intent.instructions": "선택한 버튼을 빠르게 누르기, 천천히 끝까지 누르기, 가볍게 건드리기를 각각 시도하세요. 빠르게 누르면 {early}단계부터 작동할 수 있습니다. 천천히 누르면 {fallback}단계에 도달해야 합니다. 결과는 버튼 이동 데이터를 바탕으로 한 추정치입니다.",
   "intent.waiting": "마우스가 버튼을 놓은 상태를 보고하기를 기다리는 중입니다.",

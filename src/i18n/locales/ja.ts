@@ -20,8 +20,6 @@ export const ja: Record<I18nKey, string> = {
   "intent.calibrated": "速度を {speed} に設定しました。準備ができたら意図クリックをオンにしてください。",
   "intent.calibrationFailed": "速度は {speed} のままです。2ラウンドの測定値が重なりすぎています。",
   "intent.hardwareStep": "マウスのクリックと振動はステップ {step} で作動します。",
-  "intent.hardwareApply": "固定ステップ {step} を設定",
-  "intent.hardwareQueue": "固定ステップ {step} を適用待ちにする",
   "intent.title": "適応型クリックテスト",
   "intent.instructions": "選択したボタンで、素早く押す、ゆっくり最後まで押す、軽く触れる、の3つを試してください。素早く押すとステップ {early} から反応します。ゆっくり押す場合はステップ {fallback} に達する必要があります。結果はボタンの移動データに基づく推定です。",
   "intent.waiting": "マウスからボタンが離された状態の報告を待っています。",

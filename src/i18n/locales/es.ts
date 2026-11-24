@@ -20,8 +20,6 @@ export const es: Record<I18nKey, string> = {
   "intent.calibrated": "Velocidad ajustada a {speed}. Activa el clic intencional cuando quieras.",
   "intent.calibrationFailed": "La velocidad sigue en {speed}. Las dos rondas se parecieron demasiado para calibrar.",
   "intent.hardwareStep": "El clic y la vibración del ratón usan el nivel {step}.",
-  "intent.hardwareApply": "Fijar el nivel {step}",
-  "intent.hardwareQueue": "Preparar el nivel fijo {step}",
   "intent.title": "Prueba de clic adaptativo",
   "intent.instructions": "Con el botón seleccionado, prueba una pulsación rápida, una lenta hasta el fondo y un toque leve. Las pulsaciones rápidas pueden activarse desde el nivel {early}. Las lentas deben llegar al nivel {fallback}. Los resultados son estimaciones basadas en los datos de recorrido.",
   "intent.waiting": "Esperando a que el ratón indique que se ha soltado el botón.",

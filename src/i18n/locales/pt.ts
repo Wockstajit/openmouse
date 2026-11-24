@@ -20,8 +20,6 @@ export const pt: Record<I18nKey, string> = {
   "intent.calibrated": "Velocidade ajustada para {speed}. Ative o clique intencional quando estiver pronto.",
   "intent.calibrationFailed": "A velocidade continua em {speed}. As duas rodadas se sobrepuseram demais para calibrar.",
   "intent.hardwareStep": "O clique e a vibração do mouse usam o nível {step}.",
-  "intent.hardwareApply": "Definir nível fixo {step}",
-  "intent.hardwareQueue": "Preparar nível fixo {step}",
   "intent.title": "Teste de clique adaptativo",
   "intent.instructions": "Com o botão selecionado, experimente pressionar rápido, pressionar devagar até o fim e tocar de leve. Pressões rápidas podem acionar a partir do nível {early}. Pressões lentas devem chegar ao nível {fallback}. Os resultados são estimativas baseadas nos dados de curso.",
   "intent.waiting": "Aguardando o mouse informar que o botão está solto.",

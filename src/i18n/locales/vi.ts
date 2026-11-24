@@ -20,8 +20,6 @@ export const vi: Record<I18nKey, string> = {
   "intent.calibrated": "Đã đặt tốc độ thành {speed}. Bật nhấp có chủ đích khi sẵn sàng.",
   "intent.calibrationFailed": "Tốc độ vẫn là {speed}. Hai vòng có kết quả quá giống nhau để hiệu chỉnh.",
   "intent.hardwareStep": "Nút nhấp và rung của chuột dùng mức {step}.",
-  "intent.hardwareApply": "Đặt mức cố định {step}",
-  "intent.hardwareQueue": "Chuẩn bị áp dụng mức cố định {step}",
   "intent.title": "Thử nghiệm nhấp thích ứng",
   "intent.instructions": "Với nút đã chọn, hãy thử nhấn nhanh, nhấn chậm hết hành trình và chạm nhẹ. Nhấn nhanh có thể kích hoạt từ mức {early}. Nhấn chậm phải đạt mức {fallback}. Kết quả được ước tính từ dữ liệu hành trình nút.",
   "intent.waiting": "Đang chờ chuột báo nút đã được nhả.",
