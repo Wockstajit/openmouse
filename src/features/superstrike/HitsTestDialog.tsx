@@ -26,6 +26,7 @@ export function HitsTestDialog({
   locale,
   actuation,
   maxActuation,
+  intentSpeed,
   canAdjust,
   onAdjust,
   onClose,
@@ -35,6 +36,7 @@ export function HitsTestDialog({
   /** Actuation step of the left and right buttons. */
   actuation: [number, number];
   maxActuation: number;
+  intentSpeed: number;
   /** False while a change would only be staged, not yet on the mouse. */
   canAdjust: boolean;
   onAdjust: (side: 0 | 1, value: number) => void;
@@ -83,14 +85,14 @@ export function HitsTestDialog({
   useEffect(() => {
     setIntentResult("waiting");
     if (!open || !intentOpen) return;
-    const trigger = createIntentTrigger();
+    const trigger = createIntentTrigger(intentSpeed);
     return control.subscribeAnalogPress((left, right) => {
       const depth = side === 0 ? left : right;
       const outcome = trigger.sample({ t: performance.now(), depth });
       if (outcome) setIntentResult(outcome);
       else if (depth === 0) setIntentResult((result) => result === "waiting" ? "ready" : result);
     });
-  }, [open, intentOpen, side]);
+  }, [open, intentOpen, side, intentSpeed]);
 
   const start = (): void => {
     window.clearTimeout(timer.current);
@@ -214,6 +216,7 @@ export function HitsTestDialog({
               {tp(locale, "intent.instructions", { early: INTENT_EARLY_STEP, fallback: INTENT_FALLBACK_STEP })}
             </p>
             <output aria-live="polite">{t(locale, `intent.${intentResult}`)}</output>
+            {intentResult === "ignored" ? <p className="setting-description">{t(locale, "intent.haptics")}</p> : null}
           </details>
         </div>
         <div className="import-hits-actions">

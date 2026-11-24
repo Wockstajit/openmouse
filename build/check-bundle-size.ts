@@ -50,10 +50,10 @@ export const BUDGET_BYTES: Record<string, number> = {
   // G6 HE/receiver panels, travel charts, battery tooltips and OLED theme,
   // with protocol 0.60.0: measured 177,450 bytes CSS and 3,992,589 bytes JS.
   // Main stays at 1,459,853 bytes, below its existing separate cap.
-  ".css": 178_000,
-  // The adaptive HITS test and its translations add 8,590 bytes of JS
-  // (3,994,659 -> 4,003,249 bytes with the same locked dependencies).
-  ".js": 4_005_000,
+  // Adaptive HITS test, live preview and calibration, including translations:
+  // 178,346 bytes CSS (+624 for the Buttons controls), 4,019,232 bytes JS (+15,983).
+  ".css": 179_000,
+  ".js": 4_020_000,
 };
 
 // main-*.js measured 1,511,619 bytes right after the split (posthog ~377 kB

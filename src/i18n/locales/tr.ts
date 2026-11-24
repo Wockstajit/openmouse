@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const tr: Record<I18nKey, string> = {
+  "intent.haptics": "Önizleme sonucu ekranda gösterir. Farenin fiziksel geri bildirimi tıklama titreşimi ayarına bağlıdır.",
+  "intent.live": "Niyet tıklaması önizlemesi",
+  "intent.scope": "Basışları yalnızca OpenMouse içinde anlık olarak sınıflandırır. Daha yüksek değer, erken tetikleme için daha hızlı basış gerektirir.",
+  "intent.speed": "En düşük basış hızı",
+  "intent.speedValue": "{speed} kademe/sn",
+  "intent.button": "Test ve kalibrasyon düğmesi",
+  "intent.calibrate": "20 tıklamayla kalibre et",
+  "intent.waitCue": "Rengin belirmesini bekleyin",
+  "intent.goCue": "Tıklayın ve bırakın",
+  "intent.normalRound": "Her zamanki tıklamanızla hızlı tepki verin. {count}/{total}",
+  "intent.quickRound": "Seri bir basışla hızlı tepki verin. {count}/{total}",
+  "intent.calibrated": "Kalibrasyon uygulandı.",
+  "intent.calibrationFailed": "Basışlar birbirine çok benziyordu. Tekrar deneyin veya hızı elle ayarlayın.",
   "intent.title": "Uyarlanabilir tıklama testi",
   "intent.instructions": "Seçili düğmeye hızlıca basmayı, yavaşça sonuna kadar basmayı ve hafifçe dokunmayı deneyin. Hızlı basışlar {early}. kademeden itibaren tetiklenebilir. Yavaş basışların {fallback}. kademeye ulaşması gerekir. Sonuçlar düğme hareketi verilerine dayalı tahminlerdir.",
   "intent.waiting": "Farenin düğmenin bırakıldığını bildirmesi bekleniyor.",

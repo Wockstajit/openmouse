@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const zh: Record<I18nKey, string> = {
+  "intent.haptics": "预览会在屏幕上显示结果。鼠标的实体反馈取决于点击触觉设置。",
+  "intent.live": "意图点击预览",
+  "intent.scope": "仅在 OpenMouse 中实时判断按压。数值越高，越需要快速按下才会提前触发。",
+  "intent.speed": "最低按压速度",
+  "intent.speedValue": "{speed} 档/秒",
+  "intent.button": "测试和校准按键",
+  "intent.calibrate": "点击 20 次进行校准",
+  "intent.waitCue": "等待颜色出现",
+  "intent.goCue": "点击并松开",
+  "intent.normalRound": "快速反应，按平常的方式点击。{count}/{total}",
+  "intent.quickRound": "快速反应，干脆地按下。{count}/{total}",
+  "intent.calibrated": "已应用校准。",
+  "intent.calibrationFailed": "两组按压速度太接近。请重试或手动设置速度。",
   "intent.title": "自适应点击测试",
   "intent.instructions": "请用所选按键试一下快速按下、缓慢按到底和轻触。快速按下最早可在第 {early} 档触发。缓慢按下需到达第 {fallback} 档。结果根据按键行程数据估算。",
   "intent.waiting": "正在等待鼠标报告按键已松开。",

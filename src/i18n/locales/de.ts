@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const de: Record<I18nKey, string> = {
+  "intent.haptics": "Die Vorschau zeigt das Ergebnis auf dem Bildschirm. Das fühlbare Feedback der Maus folgt ihrer Klickhaptik-Einstellung.",
+  "intent.live": "Vorschau für gezielte Klicks",
+  "intent.scope": "Klassifiziert Tastendrücke live in OpenMouse. Ein höherer Wert erfordert einen schnelleren Druck für die frühe Auslösung.",
+  "intent.speed": "Mindestgeschwindigkeit",
+  "intent.speedValue": "{speed} Stufen/s",
+  "intent.button": "Taste für Test und Kalibrierung",
+  "intent.calibrate": "Mit 20 Klicks kalibrieren",
+  "intent.waitCue": "Auf die Farbe warten",
+  "intent.goCue": "Klicken und loslassen",
+  "intent.normalRound": "Reagiere schnell mit deinem normalen Klick. {count}/{total}",
+  "intent.quickRound": "Reagiere schnell mit einem kurzen, schnellen Druck. {count}/{total}",
+  "intent.calibrated": "Kalibrierung übernommen.",
+  "intent.calibrationFailed": "Die Tastendrücke waren zu ähnlich. Versuche es erneut oder stelle den Wert manuell ein.",
   "intent.title": "Adaptiver Klicktest",
   "intent.instructions": "Drücke die gewählte Taste einmal schnell, einmal langsam ganz durch und einmal leicht. Schnelle Betätigungen können ab Stufe {early} auslösen. Langsame müssen Stufe {fallback} erreichen. Die Ergebnisse sind Schätzungen anhand der Wegdaten.",
   "intent.waiting": "Warte darauf, dass die Maus eine losgelassene Taste meldet.",

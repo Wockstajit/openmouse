@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ar: Record<I18nKey, string> = {
+  "intent.haptics": "تعرض المعاينة النتيجة على الشاشة. تتبع الاستجابة اللمسية للماوس إعداد ردّ فعل النقر.",
+  "intent.live": "معاينة النقر المقصود",
+  "intent.scope": "يصنّف الضغطات مباشرة داخل OpenMouse فقط. رفع السرعة يتطلب ضغطة أسرع للتفعيل المبكر.",
+  "intent.speed": "الحد الأدنى لسرعة الضغط",
+  "intent.speedValue": "{speed} درجة/ث",
+  "intent.button": "زر الاختبار والمعايرة",
+  "intent.calibrate": "المعايرة بـ20 نقرة",
+  "intent.waitCue": "انتظر ظهور اللون",
+  "intent.goCue": "انقر وحرّر الزر",
+  "intent.normalRound": "استجب بسرعة بنقرتك المعتادة. {count}/{total}",
+  "intent.quickRound": "استجب بسرعة بضغطة حادة. {count}/{total}",
+  "intent.calibrated": "طُبّقت المعايرة.",
+  "intent.calibrationFailed": "الضغطات متشابهة أكثر من اللازم لضبط السرعة. أعد المحاولة أو اضبطها يدويًا.",
   "intent.title": "اختبار النقر التكيفي",
   "intent.instructions": "جرّب ضغطة سريعة، وضغطة بطيئة حتى النهاية، ولمسة خفيفة بالزر المحدد. يمكن أن تعمل الضغطة السريعة من المستوى {early}. يجب أن تصل الضغطة البطيئة إلى المستوى {fallback}. النتائج تقديرية وتستند إلى تقارير حركة الزر.",
   "intent.waiting": "بانتظار إشارة من الماوس تفيد بتحرير الزر.",

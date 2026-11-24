@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const pt: Record<I18nKey, string> = {
+  "intent.haptics": "A prévia mostra o resultado na tela. O retorno físico do mouse segue a configuração háptica de clique.",
+  "intent.live": "Prévia de clique intencional",
+  "intent.scope": "Classifica os cliques ao vivo dentro do OpenMouse. Um valor maior exige um clique mais rápido para acionar antes.",
+  "intent.speed": "Velocidade mínima de pressão",
+  "intent.speedValue": "{speed} níveis/s",
+  "intent.button": "Botão de teste e calibração",
+  "intent.calibrate": "Calibrar com 20 cliques",
+  "intent.waitCue": "Espere a cor aparecer",
+  "intent.goCue": "Clique e solte",
+  "intent.normalRound": "Reaja rápido com seu clique habitual. {count}/{total}",
+  "intent.quickRound": "Reaja rápido com um clique firme e rápido. {count}/{total}",
+  "intent.calibrated": "Calibração aplicada.",
+  "intent.calibrationFailed": "Os cliques foram parecidos demais. Tente novamente ou ajuste a velocidade manualmente.",
   "intent.title": "Teste de clique adaptativo",
   "intent.instructions": "Com o botão selecionado, experimente pressionar rápido, pressionar devagar até o fim e tocar de leve. Pressões rápidas podem acionar a partir do nível {early}. Pressões lentas devem chegar ao nível {fallback}. Os resultados são estimativas baseadas nos dados de curso.",
   "intent.waiting": "Aguardando o mouse informar que o botão está solto.",

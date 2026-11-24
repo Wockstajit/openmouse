@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ko: Record<I18nKey, string> = {
+  "intent.haptics": "미리보기는 화면에 결과를 표시합니다. 마우스의 물리적 피드백은 클릭 햅틱 설정을 따릅니다.",
+  "intent.live": "의도 클릭 미리보기",
+  "intent.scope": "OpenMouse 안에서 누름을 실시간으로 분류합니다. 값이 높을수록 조기 작동에 더 빠른 누름이 필요합니다.",
+  "intent.speed": "최소 누름 속도",
+  "intent.speedValue": "초당 {speed}단계",
+  "intent.button": "테스트 및 보정 버튼",
+  "intent.calibrate": "20회 클릭으로 보정",
+  "intent.waitCue": "색이 나타날 때까지 기다리세요",
+  "intent.goCue": "클릭하고 놓으세요",
+  "intent.normalRound": "평소처럼 눌러 빠르게 반응하세요. {count}/{total}",
+  "intent.quickRound": "짧고 빠르게 눌러 반응하세요. {count}/{total}",
+  "intent.calibrated": "보정이 적용되었습니다.",
+  "intent.calibrationFailed": "누름 속도가 너무 비슷합니다. 다시 시도하거나 속도를 직접 설정하세요.",
   "intent.title": "적응형 클릭 테스트",
   "intent.instructions": "선택한 버튼을 빠르게 누르기, 천천히 끝까지 누르기, 가볍게 건드리기를 각각 시도하세요. 빠르게 누르면 {early}단계부터 작동할 수 있습니다. 천천히 누르면 {fallback}단계에 도달해야 합니다. 결과는 버튼 이동 데이터를 바탕으로 한 추정치입니다.",
   "intent.waiting": "마우스가 버튼을 놓은 상태를 보고하기를 기다리는 중입니다.",

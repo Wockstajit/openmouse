@@ -7896,9 +7896,11 @@ export function start(): void {
   });
 
   if (previewMode === "superstrike") {
-    showSuperstrikePreview();
-    deviceListView = "device";
-    emit();
+    void ensureDriverModules().then(() => {
+      showSuperstrikePreview();
+      deviceListView = "device";
+      emit();
+    });
   } else if (previewMode === "slots") {
     showSlotsPreview();
     deviceListView = "device";

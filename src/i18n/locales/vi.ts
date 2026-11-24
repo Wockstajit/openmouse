@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const vi: Record<I18nKey, string> = {
+  "intent.haptics": "Bản xem trước hiển thị kết quả trên màn hình. Phản hồi vật lý của chuột tuân theo cài đặt rung khi nhấp.",
+  "intent.live": "Xem trước nhấp có chủ đích",
+  "intent.scope": "Phân loại lần nhấn trực tiếp trong OpenMouse. Giá trị cao hơn đòi hỏi nhấn nhanh hơn để kích hoạt sớm.",
+  "intent.speed": "Tốc độ nhấn tối thiểu",
+  "intent.speedValue": "{speed} mức/giây",
+  "intent.button": "Nút thử và hiệu chỉnh",
+  "intent.calibrate": "Hiệu chỉnh bằng 20 lần nhấp",
+  "intent.waitCue": "Chờ màu xuất hiện",
+  "intent.goCue": "Nhấp rồi nhả nút",
+  "intent.normalRound": "Phản ứng nhanh bằng cú nhấp thường ngày. {count}/{total}",
+  "intent.quickRound": "Phản ứng nhanh bằng cú nhấn dứt khoát. {count}/{total}",
+  "intent.calibrated": "Đã áp dụng hiệu chỉnh.",
+  "intent.calibrationFailed": "Các lần nhấn quá giống nhau. Hãy thử lại hoặc chỉnh tốc độ thủ công.",
   "intent.title": "Thử nghiệm nhấp thích ứng",
   "intent.instructions": "Với nút đã chọn, hãy thử nhấn nhanh, nhấn chậm hết hành trình và chạm nhẹ. Nhấn nhanh có thể kích hoạt từ mức {early}. Nhấn chậm phải đạt mức {fallback}. Kết quả được ước tính từ dữ liệu hành trình nút.",
   "intent.waiting": "Đang chờ chuột báo nút đã được nhả.",

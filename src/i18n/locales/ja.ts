@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const ja: Record<I18nKey, string> = {
+  "intent.haptics": "プレビューは結果を画面に表示します。マウスの振動はクリックの触覚設定に従います。",
+  "intent.live": "意図クリックのプレビュー",
+  "intent.scope": "OpenMouse 内で押下をリアルタイムに判定します。値が高いほど、早期作動には速い押下が必要です。",
+  "intent.speed": "最小押下速度",
+  "intent.speedValue": "{speed} ステップ/秒",
+  "intent.button": "テストと調整に使うボタン",
+  "intent.calibrate": "20クリックで調整",
+  "intent.waitCue": "色が出るまで待つ",
+  "intent.goCue": "クリックして離す",
+  "intent.normalRound": "普段どおりのクリックですぐに反応してください。{count}/{total}",
+  "intent.quickRound": "素早く押してすぐに反応してください。{count}/{total}",
+  "intent.calibrated": "調整を適用しました。",
+  "intent.calibrationFailed": "押下の差が小さすぎました。再試行するか、速度を手動で設定してください。",
   "intent.title": "適応型クリックテスト",
   "intent.instructions": "選択したボタンで、素早く押す、ゆっくり最後まで押す、軽く触れる、の3つを試してください。素早く押すとステップ {early} から反応します。ゆっくり押す場合はステップ {fallback} に達する必要があります。結果はボタンの移動データに基づく推定です。",
   "intent.waiting": "マウスからボタンが離された状態の報告を待っています。",

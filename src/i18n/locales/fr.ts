@@ -3,6 +3,19 @@ import { WOOTING_UI_STRINGS } from "./wooting-ui.ts";
 import { VENDOR_KEYBOARD_UI_STRINGS } from "./vendor-keyboard-ui.ts";
 
 export const fr: Record<I18nKey, string> = {
+  "intent.haptics": "L’aperçu affiche le résultat à l’écran. Le retour physique de la souris suit son réglage haptique de clic.",
+  "intent.live": "Aperçu du clic intentionnel",
+  "intent.scope": "Classe les appuis en direct dans OpenMouse. Une valeur plus élevée exige un appui plus rapide pour déclencher tôt.",
+  "intent.speed": "Vitesse minimale d’appui",
+  "intent.speedValue": "{speed} niveaux/s",
+  "intent.button": "Bouton de test et de calibrage",
+  "intent.calibrate": "Calibrer en 20 clics",
+  "intent.waitCue": "Attendez la couleur",
+  "intent.goCue": "Cliquez et relâchez",
+  "intent.normalRound": "Réagissez vite avec votre clic habituel. {count}/{total}",
+  "intent.quickRound": "Réagissez vite avec un appui vif. {count}/{total}",
+  "intent.calibrated": "Calibrage appliqué.",
+  "intent.calibrationFailed": "Les appuis se ressemblaient trop. Réessayez ou réglez la vitesse manuellement.",
   "intent.title": "Test de clic adaptatif",
   "intent.instructions": "Avec le bouton sélectionné, essayez un appui rapide, un appui lent jusqu’au fond, puis un contact léger. Un appui rapide peut déclencher le clic dès le niveau {early}. Un appui lent doit atteindre le niveau {fallback}. Les résultats sont estimés à partir des données de course.",
   "intent.waiting": "En attente d’un signal indiquant que le bouton est relâché.",

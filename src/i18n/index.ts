@@ -1,6 +1,19 @@
 import type { InterfaceLocale } from "../features/settings/interface-preferences";
 
 const en = {
+  "intent.haptics": "The preview gives an on-screen result. The mouse’s physical feedback follows its Click Haptics setting.",
+  "intent.live": "Intent click preview",
+  "intent.scope": "Classifies presses live in OpenMouse only. Higher speeds require a faster press for early actuation.",
+  "intent.speed": "Minimum press speed",
+  "intent.speedValue": "{speed} steps/s",
+  "intent.button": "Test and calibration button",
+  "intent.calibrate": "Calibrate with 20 clicks",
+  "intent.waitCue": "Wait for the color",
+  "intent.goCue": "Click and release",
+  "intent.normalRound": "React quickly with your usual click. {count}/{total}",
+  "intent.quickRound": "React quickly with a sharp press. {count}/{total}",
+  "intent.calibrated": "Calibration applied.",
+  "intent.calibrationFailed": "The presses were too similar to tune the speed. Try again or set it manually.",
   "intent.title": "Adaptive click test",
   "intent.instructions": "Try a quick press, a slow full press, and a light touch with the selected button. Fast presses can trigger from step {early}. Slow presses must reach step {fallback}. Results are estimates from the travel reports.",
   "intent.waiting": "Waiting for the mouse to report a released button.",

@@ -2,21 +2,35 @@ import type { DepthSample } from "./hits-test.ts";
 
 export const INTENT_EARLY_STEP = 1;
 export const INTENT_FALLBACK_STEP = 5;
-// These are prototype values in HITS steps, not physical travel or firmware settings.
-const MIN_PRESS_SPEED = 0.1;
+// Speeds are reported HITS steps per second.
+export const DEFAULT_INTENT_SPEED = 100;
+export const MIN_INTENT_SPEED = 10;
+export const MAX_INTENT_SPEED = 600;
+export const INTENT_SPEED_STEP = 5;
 const MAX_SAMPLE_GAP_MS = 50;
 
 export type IntentOutcome = "early" | "fallback" | "ignored";
 
+export function validDepthSample({ t, depth }: DepthSample): boolean {
+  return Number.isFinite(t) && Number.isFinite(depth) && depth >= 0 && depth <= 10;
+}
+
+export function earlyPressSpeed(previous: DepthSample, current: DepthSample): number {
+  const elapsed = current.t - previous.t;
+  if (elapsed <= 0 || elapsed > MAX_SAMPLE_GAP_MS
+    || current.depth < INTENT_EARLY_STEP || current.depth >= INTENT_FALLBACK_STEP) return 0;
+  return Math.max(0, (current.depth - previous.depth) * 1000 / elapsed);
+}
+
 /** Evaluate one button's host-received travel samples, once per press. */
-export function createIntentTrigger() {
+export function createIntentTrigger(minSpeed = DEFAULT_INTENT_SPEED) {
   let previous: DepthSample | undefined;
   let armed = false;
   let fired = false;
 
   return {
     sample(current: DepthSample): IntentOutcome | null {
-      if (!Number.isFinite(current.t) || !Number.isFinite(current.depth) || current.depth < 0 || current.depth > 10) return null;
+      if (!validDepthSample(current)) return null;
       const prior = previous;
       const elapsed = prior ? current.t - prior.t : 0;
       if (prior && elapsed <= 0) return null;
@@ -30,9 +44,7 @@ export function createIntentTrigger() {
       }
       if (!armed || fired) return null;
 
-      if (prior && elapsed <= MAX_SAMPLE_GAP_MS
-        && current.depth >= INTENT_EARLY_STEP && current.depth < INTENT_FALLBACK_STEP
-        && (current.depth - prior.depth) / elapsed >= MIN_PRESS_SPEED) {
+      if (prior && earlyPressSpeed(prior, current) >= minSpeed) {
         fired = true;
         return "early";
       }

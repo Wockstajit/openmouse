@@ -1,6 +1,6 @@
 import { displayText } from "../../i18n/index";
 import { useUiLocale } from "../../shared/ui-locale";
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import * as control from "../../device/controller";
 import { t, tp } from "../../i18n/index";
 import type { InterfaceLocale } from "../settings/interface-preferences";
@@ -20,6 +20,8 @@ import {
 import { BunnyHop } from "../devices/cards/PerformanceCards";
 import { DeleteHitsPresetDialog } from "./DeleteHitsPresetDialog";
 import { HitsTestDialog } from "./HitsTestDialog";
+import { IntentClickControls } from "./IntentClickControls";
+import { loadIntentPreferences, saveIntentPreferences, type IntentPreferences } from "./intent-preferences";
 import { SaveHitsPresetDialog } from "./SaveHitsPresetDialog";
 
 function SuperstrikeSteps({
@@ -96,7 +98,9 @@ function PressMeter({ actuation }: { actuation: [number, number] }): ReactNode {
 }
 
 // Saved setups for both buttons, in this browser, and a short code to share one.
-function HitsPresets({ state, limits, locale, canAdjust }: { state: AnalogTuningState; limits: HitsLimits; locale: InterfaceLocale; canAdjust: boolean }): ReactNode {
+function HitsPresets({ state, limits, locale, canAdjust, intentSpeed }: {
+  state: AnalogTuningState; limits: HitsLimits; locale: InterfaceLocale; canAdjust: boolean; intentSpeed: number;
+}): ReactNode {
   const [presets, setPresets] = useState<HitsPreset[]>(() => loadHitsPresets(localStorage));
   const [note, setNote] = useState("");
   const [saving, setSaving] = useState(false);
@@ -224,6 +228,7 @@ function HitsPresets({ state, limits, locale, canAdjust }: { state: AnalogTuning
         locale={locale}
         actuation={state.mode === "both" ? [state.both.actuation, state.both.actuation] : [state.left.actuation, state.right.actuation]}
         maxActuation={limits.maxActuation}
+        intentSpeed={intentSpeed}
         canAdjust={canAdjust}
         onAdjust={(side, value) => control.setAnalogTuningValue(state.mode === "both" ? "both" : side === 0 ? "left" : "right", "actuation", value)}
         onClose={() => setTesting(false)}
@@ -327,11 +332,24 @@ function TuningControls({
 }
 
 export function Superstrike({ snapshot }: { snapshot: ControlSnapshot }): ReactNode {
-  const tuning = snapshot.traits.logitech ? snapshot.status?.analogButtonTuning : undefined;
+  const status = snapshot.status;
+  const tuning = snapshot.traits.logitech ? status?.analogButtonTuning : undefined;
   if (!tuning || tuning.buttons.length !== 2) return null;
+  const device = status?.unitId || status?.modelId || status?.name || "superstrike";
+  return <SuperstrikeSettings key={device} snapshot={snapshot} tuning={tuning} device={device} />;
+}
+
+function SuperstrikeSettings({ snapshot, tuning, device }: {
+  snapshot: ControlSnapshot; tuning: HitsLimits; device: string;
+}): ReactNode {
   const locale = snapshot.preferences.locale;
   const state = snapshot.analogTuning;
   const showApply = !snapshot.preferences.instantFlash;
+  const [intent, setIntent] = useState(() => loadIntentPreferences(localStorage, device));
+  const changeIntent = useCallback((update: Partial<IntentPreferences>) => {
+    setIntent((current) => ({ ...current, ...update }));
+  }, []);
+  useEffect(() => saveIntentPreferences(localStorage, device, intent), [device, intent]);
 
   return (
     // A card in the Buttons tab's card list, so the mouse panel sits beside it.
@@ -340,8 +358,9 @@ export function Superstrike({ snapshot }: { snapshot: ControlSnapshot }): ReactN
     <div id="logitech-analog-button-settings">
       <article className="setting-card superstrike-tuning-card">
         <div className="setting-heading superstrike-tuning-heading"><div><h2>{displayText(locale, "HITS Tuning")}</h2></div></div>
-        <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} />
+        <HitsPresets state={state} limits={tuning} locale={locale} canAdjust={!showApply} intentSpeed={intent.speed} />
         <PressMeter actuation={[state.left.actuation, state.right.actuation]} />
+        <IntentClickControls locale={locale} preferences={intent} onChange={changeIntent} />
         <div className="superstrike-tabs" role="tablist" aria-label={displayText(locale, "HITS tuning mode")}>
           {(["both", "independent"] as const).map((mode) => (
             <button

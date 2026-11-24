@@ -49,6 +49,13 @@
 .superstrike-press-meter i { position: relative; height: 8px; border-radius: var(--r-xs); background: var(--surface-4); }
 .superstrike-press-meter i[data-on="true"] { background: var(--accent); }
 .superstrike-press-meter i[data-actuation="true"]::after { content: ""; position: absolute; inset: -3px 0; border: 1px solid var(--text-2); border-radius: var(--r-xs); }
+.superstrike-intent { display: grid; gap: 12px; border-block: 1px solid var(--line-1); padding-block: 12px; }
+.superstrike-intent-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.superstrike-intent-heading h3 { margin-block: 0 4px; font-size: var(--fs-body); font-weight: 600; }
+.superstrike-intent-heading .switch-button { flex: none; }
+.superstrike-intent-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.superstrike-intent-actions select { min-width: 0; max-width: 100%; }
+.superstrike-intent-actions output { color: var(--text-2); font-size: var(--fs-meta); }
 .superstrike-tabs, .button-map-layers { display: inline-flex; align-self: start; justify-self: center; gap: 2px; padding: 3px; background: var(--well); box-shadow: var(--inset-shadow); border-radius: var(--r-sm); max-width: 100%; }
 .superstrike-tabs { align-self: flex-start; }
 .superstrike-tabs button, .button-map-layers button { min-height: 30px; padding: 6px 14px; border-radius: var(--r-xs); color: var(--text-3); font-size: var(--fs-meta); font-weight: 600; }
@@ -165,6 +172,7 @@
 .hits-test-area { display: grid; place-items: center; min-height: 320px; padding: 20px; border-radius: var(--r-md); background: var(--well); box-shadow: var(--inset-shadow); color: var(--text-2); font-size: var(--fs-h2); font-weight: 550; text-align: center; }
 .hits-test-area.is-wait { background: color-mix(in srgb, var(--warn) 13%, var(--well)); color: var(--warn); }
 .hits-test-area.is-go { background: var(--info); color: var(--ink-0); }
+.hits-test-area.superstrike-intent-target { min-height: 84px; }
 .hits-test-result { display: grid; gap: 16px; width: 100%; }
 .hits-test-result-numbers { display: grid; gap: 4px; }
 .hits-test-result small { color: var(--text-3); font-size: var(--fs-meta); font-weight: 400; }
